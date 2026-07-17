@@ -1,0 +1,14 @@
+{
+  // Cloudflare Workers (statik site) yapılandırması.
+  // Bu dosya sayesinde `wrangler deploy` otomatik kurulum yapmaz,
+  // yalnızca dist/ içeriğini statik varlık olarak yükler.
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "name": "irem-sayhan-website",
+  "compatibility_date": "2026-07-08",
+  "assets": {
+    "directory": "./dist",
+    // Bilinmeyen yollar 404 durum koduyla dist/404.html'e düşer
+    // (route'lar prerender edildi; 404.html script'leri yüklediği için React yine devralır)
+    "not_found_handling": "404-page"
+  }
+}

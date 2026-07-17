@@ -1,0 +1,279 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Geist Variable', sans-serif;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    --background: #ffffff;
+    --foreground: #0b2545;
+    --card: #ffffff;
+    --card-foreground: #0b2545;
+    --popover: #ffffff;
+    --popover-foreground: #0b2545;
+    --primary: #1e56b0;
+    --primary-foreground: #ffffff;
+    --secondary: #0b2545;
+    --secondary-foreground: #ffffff;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --accent: #eaf1fb;
+    --accent-foreground: #1c3f7c;
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #1e56b0;
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
+}
+
+/* ---- Mobil menü animasyonları: açılış ve tam tersi kapanış ---- */
+
+/* Öğeler: açılışta daireden tam pill'e; kapanışta tam pill'den daireye */
+@keyframes menu-pill-in {
+  0% { width: 2.75rem; opacity: 0; transform: scale(0.4); }
+  35% { width: 2.75rem; opacity: 1; transform: scale(1); }
+  100% { width: 100%; opacity: 1; transform: scale(1); }
+}
+@keyframes menu-pill-out {
+  0% { width: 100%; opacity: 1; transform: scale(1); }
+  60% { width: 2.75rem; opacity: 1; transform: scale(1); }
+  100% { width: 2.75rem; opacity: 0; transform: scale(0.4); }
+}
+@keyframes menu-label-in { 0%, 55% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes menu-label-out { 0% { opacity: 1; } 45%, 100% { opacity: 0; } }
+@keyframes menu-cta-in { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: none; } }
+@keyframes menu-cta-out { 0% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(10px); } }
+@keyframes menu-card-in { 0% { opacity: 0; transform: translateY(-6px) scale(0.98); } 100% { opacity: 1; transform: none; } }
+@keyframes menu-card-out { 0% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+
+/* Hamburger çizgileri: açılışta aşağı düşer, kapanışta geri yükselir */
+@keyframes ham-drop { 0% { transform: translateY(0); opacity: 1; } 55% { opacity: 1; } 100% { transform: translateY(0.85rem); opacity: 0; } }
+@keyframes ham-rise { 0% { transform: translateY(0.85rem); opacity: 0; } 45% { opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+/* Çarpı: yukarıdan düz bir çizgi iner, sonra dönerek X olur (kapanışta tersi) */
+@keyframes x-a-in {
+  0% { transform: translate(-50%, -50%) translateY(-0.9rem) rotate(0deg); opacity: 0; }
+  45% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translateY(0) rotate(45deg); opacity: 1; }
+}
+@keyframes x-b-in {
+  0% { transform: translate(-50%, -50%) translateY(-0.9rem) rotate(0deg); opacity: 0; }
+  45% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translateY(0) rotate(-45deg); opacity: 1; }
+}
+@keyframes x-a-out {
+  0% { transform: translate(-50%, -50%) translateY(0) rotate(45deg); opacity: 1; }
+  55% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translateY(-0.9rem) rotate(0deg); opacity: 0; }
+}
+@keyframes x-b-out {
+  0% { transform: translate(-50%, -50%) translateY(0) rotate(-45deg); opacity: 1; }
+  55% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translateY(-0.9rem) rotate(0deg); opacity: 0; }
+}
+
+.menu-pill-in { animation: menu-pill-in 0.5s ease-in-out both; }
+.menu-pill-out { animation: menu-pill-out 0.45s ease-in-out both; }
+.menu-label-in { animation: menu-label-in 0.55s ease-in-out both; }
+.menu-label-out { animation: menu-label-out 0.3s ease-in-out both; }
+.menu-cta-in { animation: menu-cta-in 0.4s ease-in-out both; }
+.menu-cta-out { animation: menu-cta-out 0.3s ease-in-out both; }
+.menu-card-in { animation: menu-card-in 0.3s ease-in-out both; }
+.menu-card-out { animation: menu-card-out 0.3s ease-in-out both; }
+
+.ham-bar { height: 2px; width: 1.25rem; border-radius: 9999px; background-color: currentColor; }
+.ham-bar--drop { animation: ham-drop 0.28s ease-in-out forwards; }
+.ham-bar--rise { animation: ham-rise 0.3s ease-in-out both; }
+
+.x-stroke {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.15rem;
+  height: 2px;
+  border-radius: 9999px;
+  background-color: currentColor;
+}
+.x-stroke-a-in { animation: x-a-in 0.45s ease-in-out both; }
+.x-stroke-b-in { animation: x-b-in 0.45s ease-in-out both; }
+.x-stroke-a-out { animation: x-a-out 0.4s ease-in-out both; }
+.x-stroke-b-out { animation: x-b-out 0.4s ease-in-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-pill-in, .menu-pill-out,
+  .menu-label-in, .menu-label-out,
+  .menu-cta-in, .menu-cta-out,
+  .menu-card-in, .menu-card-out,
+  .ham-bar--rise,
+  .x-stroke-a-in, .x-stroke-b-in, .x-stroke-a-out, .x-stroke-b-out {
+    animation: none;
+    opacity: 1;
+  }
+  .menu-pill-in { width: 100%; }
+  .menu-pill-out, .ham-bar--drop, .x-stroke-a-out, .x-stroke-b-out { display: none; }
+  .x-stroke-a-in { transform: translate(-50%, -50%) rotate(45deg); }
+  .x-stroke-b-in { transform: translate(-50%, -50%) rotate(-45deg); }
+}
+
+/* ---- Açılış: kareler saat yönünde belirir; navbar açılırken butonlar sırayla pop-up ---- */
+@keyframes square-pop {
+  0% { opacity: 0; transform: scale(0.2); }
+  70% { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.square-pop { animation: square-pop 0.45s ease-in-out both; }
+
+@keyframes item-pop {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.item-pop { animation: item-pop 0.4s ease-in-out both; }
+
+/* Tedavi kartları: sırayla soldan kayarak pop ile gelir */
+@keyframes card-slide-pop {
+  0% { opacity: 0; transform: translateX(-48px) scale(0.82); }
+  70% { opacity: 1; transform: translateX(4px) scale(1.03); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+.card-slide-pop { animation: card-slide-pop 0.55s ease-in-out both; }
+
+/* Tedavi kartları: sağdan sırayla, hafif pop ile gelir */
+@keyframes card-enter-right {
+  0% { opacity: 0; transform: translateX(56px) scale(0.86); }
+  70% { opacity: 1; transform: translateX(-6px) scale(1.03); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+.card-enter-right { animation: card-enter-right 0.6s ease-in-out both; }
+
+/* Quiz: ilk soru sinematik yavaş pop; sonraki sorular hafif kayma */
+@keyframes quiz-pop-in {
+  0% { opacity: 0; transform: translateY(18px) scale(0.92); }
+  60% { opacity: 1; transform: translateY(0) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.quiz-pop-in { animation: quiz-pop-in 0.85s ease-in-out both; }
+
+@keyframes quiz-q-in {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.quiz-q-in { animation: quiz-q-in 0.45s ease-in-out both; }
+
+@keyframes quiz-result-card {
+  0% { opacity: 0; transform: translateX(-24px) scale(0.96); }
+  100% { opacity: 1; transform: none; }
+}
+.quiz-result-card { animation: quiz-result-card 0.6s ease-in-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .square-pop,
+  .item-pop,
+  .card-slide-pop,
+  .card-enter-right,
+  .quiz-pop-in,
+  .quiz-q-in,
+  .quiz-result-card { animation: none; opacity: 1; transform: none; }
+}
