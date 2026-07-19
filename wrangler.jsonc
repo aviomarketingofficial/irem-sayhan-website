@@ -7,6 +7,10 @@
   "compatibility_date": "2026-07-08",
   "assets": {
     "directory": "./dist",
+    // Adresler sondaki eğik çizgi OLMADAN sunulur; /blog/yazi/ → /blog/yazi.
+    // Böylece sunulan adres, sayfanın canonical etiketiyle birebir aynı olur
+    // (varsayılan "auto-trailing-slash" tersini yapıp 307 yönlendirme üretiyordu).
+    "html_handling": "drop-trailing-slash",
     // Bilinmeyen yollar 404 durum koduyla dist/404.html'e düşer
     // (route'lar prerender edildi; 404.html script'leri yüklediği için React yine devralır)
     "not_found_handling": "404-page"
