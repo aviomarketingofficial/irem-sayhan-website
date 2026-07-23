@@ -98,7 +98,7 @@ export function Footer() {
           </p>
           <p className="text-xs text-muted-foreground">
             Tasarım ve geliştirme:{" "}
-            <span className="font-medium text-[#0b2545]">AvioMarketing</span>
+            <span className="font-medium text-[#0b2545]">Avio Marketing</span>
           </p>
         </div>
       </div>

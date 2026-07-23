@@ -3,7 +3,7 @@ import { staticPageMeta } from "@/data/pageMeta"
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { APPOINTMENT_URL } from "@/lib/links"
+import { APPOINTMENT_URL, PHOTO_CDN } from "@/lib/links"
 import { cn } from "@/lib/utils"
 
 function Reveal({
@@ -116,23 +116,39 @@ export function Hakkimda() {
     <section className="bg-background pt-28 sm:pt-36">
       {/* Hero */}
       <section className="mx-auto max-w-5xl px-4 pb-12 sm:px-6 sm:pb-16 lg:px-8">
-        <Reveal>
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary">
-            Hakkımda
-          </p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0b2545] sm:text-5xl">
-            Dr. İrem Seyhan Uyarcan
-          </h1>
-          <p className="mt-3 text-lg font-medium text-primary sm:text-xl">
-            Ortodonti Uzmanı, Manisa
-          </p>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            2009 yılından bu yana Manisa'daki kendi muayenehanesinde
-            yetişkinler ve çocuklar için ortodontik tedaviler uyguluyor. Diş ve
-            çene düzensizliklerinde, sizi dinleyerek ve süreci açıkça anlatarak
-            yola çıkmayı önemsiyor.
-          </p>
-        </Reveal>
+        <div className="grid items-center gap-10 md:grid-cols-[1.2fr_1fr] md:gap-14">
+          <Reveal>
+            <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary">
+              Hakkımda
+            </p>
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[#0b2545] sm:text-5xl">
+              Dr. İrem Seyhan Uyarcan
+            </h1>
+            <p className="mt-3 text-lg font-medium text-primary sm:text-xl">
+              Ortodonti Uzmanı, Manisa
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
+              2009 yılından bu yana Manisa'daki kendi muayenehanesinde
+              yetişkinler ve çocuklar için ortodontik tedaviler uyguluyor. Diş
+              ve çene düzensizliklerinde, sizi dinleyerek ve süreci açıkça
+              anlatarak yola çıkmayı önemsiyor.
+            </p>
+          </Reveal>
+
+          <Reveal delay={120}>
+            <div className="overflow-hidden rounded-3xl bg-muted shadow-sm ring-1 ring-border">
+              <img
+                src={`${PHOTO_CDN}/hakkimda-portre.webp`}
+                alt="Dr. İrem Seyhan Uyarcan, Manisa'daki muayenehanesinde"
+                width={1200}
+                height={1125}
+                loading="eager"
+                decoding="async"
+                className="block h-auto w-full"
+              />
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* Hakkımda anlatımı */}

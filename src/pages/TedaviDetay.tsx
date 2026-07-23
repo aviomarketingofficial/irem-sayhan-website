@@ -1,7 +1,9 @@
 import { SITE_URL, usePageMeta } from "@/lib/seo"
 import { staticPageMeta, treatmentPageMeta } from "@/data/pageMeta"
+import { useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { treatments } from "@/data/treatments"
 import {
   recommendedTreatments,
@@ -76,6 +78,8 @@ function ChevronRightIcon({ className }: { className?: string }) {
 export function TedaviDetay() {
   const { slug } = useParams()
   const treatment = treatments.find((t) => t.slug === slug)
+  // İlgili sorular akordeonu: açık olan sorunun metni (tek seferde bir tanesi açık)
+  const [openFaq, setOpenFaq] = useState<string | null>(null)
 
   // Sayfa meta: özel kayıt varsa onu, yoksa tedavi verisinden üret; bulunamadıysa noindex
   const tMeta = slug ? treatmentPageMeta[slug] : undefined
@@ -233,19 +237,42 @@ export function TedaviDetay() {
         <section className="mt-16 border-t border-border pt-10">
           <h2 className="text-lg font-semibold text-[#0b2545]">İlgili sorular</h2>
           <ul className="mt-5 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
-            {relatedFaqs.map((faq) => (
-              <li key={faq.question}>
-                <Link
-                  to="/sss"
-                  className="group flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-accent"
-                >
-                  <span className="text-sm font-medium leading-relaxed text-[#0b2545]">
-                    {faq.question}
-                  </span>
-                  <ChevronRightIcon className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
-                </Link>
-              </li>
-            ))}
+            {relatedFaqs.map((faq) => {
+              const open = openFaq === faq.question
+              return (
+                <li key={faq.question}>
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(open ? null : faq.question)}
+                    aria-expanded={open}
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-accent"
+                  >
+                    <span className="text-sm font-medium leading-relaxed text-[#0b2545]">
+                      {faq.question}
+                    </span>
+                    <ChevronRightIcon
+                      className={cn(
+                        "size-4 shrink-0 text-muted-foreground transition-transform duration-300",
+                        open ? "rotate-90 text-primary" : "",
+                      )}
+                    />
+                  </button>
+                  {/* Cevap: grid-rows hilesiyle yumuşak yükseklik geçişi */}
+                  <div
+                    className={cn(
+                      "grid transition-all duration-300 ease-in-out",
+                      open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+                    )}
+                  >
+                    <div className="overflow-hidden">
+                      <p className="px-5 pb-4 text-sm leading-relaxed text-muted-foreground">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              )
+            })}
           </ul>
           <Link
             to="/sss"
@@ -285,10 +312,10 @@ export function TedaviDetay() {
         </section>
       )}
 
-      {/* Önerilen tedaviler */}
+      {/* İlgili tedaviler */}
       {recommended.length > 0 && (
         <section className="mt-16 border-t border-border pt-10">
-          <h2 className="text-lg font-semibold text-[#0b2545]">Önerilen tedaviler</h2>
+          <h2 className="text-lg font-semibold text-[#0b2545]">İlgili tedaviler</h2>
           <div className="mt-5 flex flex-wrap gap-2.5">
             {recommended.map((t) => (
               <Link

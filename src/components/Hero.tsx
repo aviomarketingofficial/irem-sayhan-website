@@ -86,7 +86,7 @@ export function Hero({ revealed = true }: { revealed?: boolean }) {
           <Button
             asChild
             className={cn(
-              "h-11 rounded-full bg-[#25D366] px-5 text-sm text-white hover:bg-[#1fae57]",
+              "h-11 rounded-full bg-[#25D366] px-6 text-sm text-white hover:bg-[#1fae57]",
               buttonPop(2).className,
             )}
             style={buttonPop(2).style}
