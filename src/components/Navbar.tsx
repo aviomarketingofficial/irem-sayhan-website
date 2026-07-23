@@ -110,6 +110,8 @@ export function Navbar({ phase = "rise" }: { phase?: Phase }) {
                 src={q.src}
                 alt=""
                 aria-hidden="true"
+                width={634}
+                height={620}
                 className="square-pop block w-full"
                 style={{
                   gridColumn: q.col,

@@ -1,25 +1,13 @@
 import { type CSSProperties, useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
-import { faqs, type Faq } from "@/data/faqs"
+import { faqById, HOME_FAQ_IDS, type Faq } from "@/data/faqs"
 import { cn } from "@/lib/utils"
-import { playedOnce } from "@/lib/animatedOnce"
+import { playedOnce, prefersReducedMotion } from "@/lib/animatedOnce"
 
-// Kategori cesitliligi olsun diye her ana kategoriden temsili bir soru seciyoruz.
-// (ilk 6-8 yerine farkli baslıklardan secim)
-const SELECTED_QUESTIONS: string[] = [
-  "Diş teli tedavisi ne kadar sürer?",
-  "Şeffaf plak mı diş teli mi, hangisi daha iyi?",
-  "Metal braket mi seramik braket mi tercih etmeliyim?",
-  "Çocuğumu ilk kez kaç yaşında ortodontiste götürmeliyim?",
-  "Çene uyumsuzluğum sadece diş teliyle düzelir mi, yoksa ameliyat şart mı?",
-  "Tedavi bittikten sonra dişler eski haline döner mi?",
-  "Manisa'da ortodonti tedavisi için nasıl randevu alabilirim?",
-]
-
-// Secilen sorulari faqs icindeki sirasini koruyarak topla (eslesmeyen olursa atla)
-const selected: Faq[] = SELECTED_QUESTIONS.map((q) => faqs.find((f) => f.question === q)).filter(
-  (f): f is Faq => Boolean(f),
-)
+// Gösterilecek sorular data/faqs.ts'teki HOME_FAQ_IDS listesinden gelir (tek kaynak;
+// scripts/prerender.ts da aynı listeyi kullanır). Seçim kimliğe göre yapıldığı için
+// soru metni değişse bile kopmaz; kimlik bulunamazsa faqById hata fırlatır.
+const selected: Faq[] = HOME_FAQ_IDS.map(faqById)
 
 function PlusIcon({ open }: { open: boolean }) {
   return (
@@ -112,16 +100,16 @@ function FaqRow({ faq, index, inView }: { faq: Faq; index: number; inView: boole
 
 export function HomeFaq() {
   const sectionRef = useRef<HTMLElement>(null)
-  const [inView, setInView] = useState(() => playedOnce.has("homefaq"))
+  // Oturumda oynadıysa VEYA hareket azaltma açıksa doğrudan görünür doğ
+  const [inView, setInView] = useState(
+    () => playedOnce.has("homefaq") || prefersReducedMotion(),
+  )
 
   useEffect(() => {
     const el = sectionRef.current
     if (!el) return
     if (playedOnce.has("homefaq")) return // bu oturumda oynadı; tekrar oynamasın
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setInView(true)
-      return
-    }
+    if (prefersReducedMotion()) return
     const obs = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {

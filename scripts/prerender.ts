@@ -11,9 +11,27 @@ import { join } from "node:path"
 import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "../src/lib/seo"
 import { staticPageMeta, treatmentPageMeta } from "../src/data/pageMeta"
 import { treatments } from "../src/data/treatments"
-import { faqs } from "../src/data/faqs"
+import { faqs, faqById, HOME_FAQ_IDS, type Faq } from "../src/data/faqs"
 import { BLOG_PUBLISH_DATE_ISO } from "../src/data/blogMeta"
 import type { BlogContent } from "../src/data/blogContent"
+import { HERO_INTRO, HERO_TITLE } from "../src/data/home"
+import {
+  ABOUT_LEAD,
+  ABOUT_PARAGRAPHS,
+  INTERESTS,
+  TIMELINE,
+  VALUES,
+} from "../src/data/about"
+import {
+  ADDRESS,
+  EMAIL,
+  EMAIL_URL,
+  LANDLINE_DISPLAY,
+  LANDLINE_TEL,
+  PHONE_DISPLAY,
+  PHONE_TEL,
+  WORKING_HOURS,
+} from "../src/lib/links"
 
 const ROOT = join(import.meta.dir, "..")
 const DIST = join(ROOT, "dist")
@@ -162,8 +180,94 @@ function linkList(items: { href: string; label: string }[]): string {
   return `<ul>\n${items.map((l) => `        <li><a href="${l.href}">${esc(l.label)}</a></li>`).join("\n")}\n      </ul>`
 }
 
-function staticBody(h1: string, summary: string, items: { href: string; label: string }[]): string {
-  return `      <main>\n      <h1>${esc(h1)}</h1>\n      <p>${esc(summary)}</p>\n      <nav>${linkList(items)}</nav>\n      </main>`
+function staticBody(
+  h1: string,
+  summary: string,
+  items: { href: string; label: string }[],
+  sections: string[] = [],
+): string {
+  return [
+    `      <main>`,
+    `      <h1>${esc(h1)}</h1>`,
+    `      <p>${esc(summary)}</p>`,
+    ...sections,
+    `      <nav>${linkList(items)}</nav>`,
+    `      </main>`,
+  ].join("\n")
+}
+
+/* ---------- gövde bölümleri ----------
+   KURAL: buradaki tüm METİN veri dosyalarından gelir (faqs.ts, treatments.ts,
+   home.ts, about.ts, links.ts). Elle metin yazılmaz — yoksa sitedeki metin
+   değişince statik HTML eskir ve bota/insana farklı içerik gitmiş olur.
+   Yalnızca <h2> bölüm etiketleri yapısaldır. */
+
+function faqSection(heading: string, list: Faq[]): string[] {
+  return [
+    `      <section>`,
+    `      <h2>${esc(heading)}</h2>`,
+    ...list.flatMap((f) => [
+      `      <h3>${esc(f.question)}</h3>`,
+      `      <p>${esc(f.answer)}</p>`,
+    ]),
+    `      </section>`,
+  ]
+}
+
+function treatmentSection(heading: string): string[] {
+  return [
+    `      <section>`,
+    `      <h2>${esc(heading)}</h2>`,
+    ...treatments.flatMap((t) => [
+      `      <h3><a href="/tedaviler/${t.slug}">${esc(t.title)}</a></h3>`,
+      `      <p>${esc(t.short)}</p>`,
+    ]),
+    `      </section>`,
+  ]
+}
+
+function contactSection(heading: string): string[] {
+  return [
+    `      <section>`,
+    `      <h2>${esc(heading)}</h2>`,
+    `      <p>${esc(ADDRESS)}</p>`,
+    `      <p>Telefon: <a href="${PHONE_TEL}">${esc(PHONE_DISPLAY)}</a></p>`,
+    `      <p>Sabit hat: <a href="${LANDLINE_TEL}">${esc(LANDLINE_DISPLAY)}</a></p>`,
+    `      <p>E-posta: <a href="${EMAIL_URL}">${esc(EMAIL)}</a></p>`,
+    `      <ul>`,
+    ...WORKING_HOURS.map((h) => `        <li>${esc(h.label)}: ${esc(h.value)}</li>`),
+    `      </ul>`,
+    `      </section>`,
+  ]
+}
+
+function aboutSections(): string[] {
+  return [
+    `      <section>`,
+    `      <h2>Kısa bir tanışma</h2>`,
+    ...ABOUT_PARAGRAPHS.map((p) => `      <p>${esc(p)}</p>`),
+    `      </section>`,
+    `      <section>`,
+    `      <h2>Eğitim ve deneyim</h2>`,
+    ...TIMELINE.flatMap((t) => [
+      `      <h3>${esc(t.year)} — ${esc(t.title)}</h3>`,
+      `      <p>${esc(t.detail)}</p>`,
+    ]),
+    `      </section>`,
+    `      <section>`,
+    `      <h2>İlgi alanları</h2>`,
+    `      <ul>`,
+    ...INTERESTS.map((i) => `        <li>${esc(i)}</li>`),
+    `      </ul>`,
+    `      </section>`,
+    `      <section>`,
+    `      <h2>Yaklaşımım</h2>`,
+    ...VALUES.flatMap((v) => [
+      `      <h3>${esc(v.title)}</h3>`,
+      `      <p>${esc(v.text)}</p>`,
+    ]),
+    `      </section>`,
+  ]
 }
 
 /* ---------- veri: blog içerikleri ---------- */
@@ -192,20 +296,43 @@ const faqJsonld = {
 }
 
 // Sayfaların gerçek h1 metinleri (sayfa bileşenleriyle uyumlu)
-const staticPages: { path: string; h1: string; links: { href: string; label: string }[]; jsonld?: object[] }[] = [
-  { path: "/hakkimda", h1: "Dr. İrem Seyhan Uyarcan", links: MAIN_LINKS.filter((l) => l.href !== "/hakkimda") },
+const staticPages: {
+  path: string
+  h1: string
+  links: { href: string; label: string }[]
+  jsonld?: object[]
+  sections?: string[]
+}[] = [
+  {
+    path: "/hakkimda",
+    h1: "Dr. İrem Seyhan Uyarcan",
+    links: MAIN_LINKS.filter((l) => l.href !== "/hakkimda"),
+    sections: [`      <p>${esc(ABOUT_LEAD)}</p>`, ...aboutSections()],
+  },
   {
     path: "/tedaviler",
     h1: "Size uygun ortodontik tedavi",
     links: treatments.map((t) => ({ href: `/tedaviler/${t.slug}`, label: t.title })),
+    sections: treatmentSection("Tedaviler"),
   },
   {
     path: "/blog",
     h1: "Blog",
     links: blogContents.map((c) => ({ href: `/blog/${c.slug}`, label: c.title })),
   },
-  { path: "/sss", h1: "Sıkça Sorulan Sorular", links: MAIN_LINKS.filter((l) => l.href !== "/sss"), jsonld: [faqJsonld] },
-  { path: "/iletisim", h1: "İletişim", links: MAIN_LINKS.filter((l) => l.href !== "/iletisim") },
+  {
+    path: "/sss",
+    h1: "Sıkça Sorulan Sorular",
+    links: MAIN_LINKS.filter((l) => l.href !== "/sss"),
+    jsonld: [faqJsonld],
+    sections: faqSection("Sorular ve yanıtları", faqs),
+  },
+  {
+    path: "/iletisim",
+    h1: "İletişim",
+    links: MAIN_LINKS.filter((l) => l.href !== "/iletisim"),
+    sections: contactSection("Muayenehane bilgileri"),
+  },
 ]
 
 for (const page of staticPages) {
@@ -214,7 +341,7 @@ for (const page of staticPages) {
   const html = renderPage(
     template,
     { ...meta, path: page.path, jsonld: page.jsonld },
-    staticBody(page.h1, meta.description, page.links),
+    staticBody(page.h1, meta.description, page.links, page.sections),
   )
   writeRoute(page.path, html)
   count++
@@ -338,6 +465,30 @@ for (const c of blogContents) {
   writeRoute(path, html)
   count++
 }
+
+/* ---------- ana sayfa ---------- */
+
+// "/" şablonun kendisidir (dist/index.html). Gövdesi boş kaldığı için JavaScript
+// çalıştırmayan botlar — özellikle AI tarayıcıları — burada hiçbir şey görmüyordu.
+// Şablon yukarıda (satır ~178) zaten okunduğu için bu dosyayı şimdi güvenle yazabiliriz.
+const homeMeta = staticPageMeta["/"]
+if (!homeMeta) throw new Error("prerender: staticPageMeta kaydı yok: /")
+const homeBody = [
+  `      <main>`,
+  `      <h1>${esc(HERO_TITLE)}</h1>`,
+  `      <p>${esc(HERO_INTRO)}</p>`,
+  ...treatmentSection("Tedavilerimiz"),
+  ...faqSection("Merak edilenler", HOME_FAQ_IDS.map(faqById)),
+  ...contactSection("Muayenehane"),
+  `      <nav>${linkList(MAIN_LINKS.filter((l) => l.href !== "/"))}</nav>`,
+  `      </main>`,
+].join("\n")
+writeFileSync(
+  join(DIST, "index.html"),
+  renderPage(template, { ...homeMeta, path: "/" }, homeBody),
+  "utf8",
+)
+count++
 
 /* ---------- 404 sayfası ---------- */
 

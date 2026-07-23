@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { playedOnce } from "@/lib/animatedOnce"
+import { playedOnce, prefersReducedMotion } from "@/lib/animatedOnce"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { APPOINTMENT_URL, WHATSAPP_URL } from "@/lib/links"
@@ -33,16 +33,16 @@ function CalendarIcon() {
 
 export function FinalCta() {
   const ref = useRef<HTMLElement>(null)
-  const [visible, setVisible] = useState(() => playedOnce.has("finalcta"))
+  // Oturumda oynadıysa VEYA hareket azaltma açıksa doğrudan görünür doğ
+  const [visible, setVisible] = useState(
+    () => playedOnce.has("finalcta") || prefersReducedMotion(),
+  )
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
     if (playedOnce.has("finalcta")) return // bu oturumda oynadı; tekrar oynamasın
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true)
-      return
-    }
+    if (prefersReducedMotion()) return
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

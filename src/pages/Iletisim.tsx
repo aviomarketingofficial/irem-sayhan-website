@@ -11,14 +11,12 @@ import {
   EMAIL,
   EMAIL_URL,
   WORKING_HOURS,
+  ADDRESS,
+  MAP_EMBED_URL,
+  DIRECTIONS_URL,
+  INSTAGRAM_URL,
+  FACEBOOK_URL,
 } from "@/lib/links"
-
-const ADDRESS =
-  "Anafartalar Mah. 1610 Sok. Bakoğlu Apt. No: 1/3, Şehzadeler / Manisa 45020"
-// Dr. İrem Seyhan Uyarcan muayenehanesinin gerçek Google Maps konumu (pin tam burada)
-const COORDS = "38.6141386,27.4297752"
-const MAP_EMBED_URL = `https://maps.google.com/maps?q=${COORDS}&z=17&output=embed`
-const DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${COORDS}`
 
 function PinIcon() {
   return (
@@ -244,7 +242,7 @@ export function Iletisim() {
                 </div>
               </div>
 
-              {/* Sosyal medya (placeholder) */}
+              {/* Sosyal medya — adresler lib/links.ts'te */}
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 text-primary">
                   <InstagramIcon />
@@ -255,23 +253,24 @@ export function Iletisim() {
                   </p>
                   <div className="mt-2 flex items-center gap-2">
                     <a
-                      href="#"
-                      aria-label="Instagram (yakında)"
+                      href={INSTAGRAM_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Instagram'da takip edin"
                       className="inline-flex size-9 items-center justify-center rounded-lg border border-border text-[#0b2545] transition-colors hover:bg-muted hover:text-primary"
                     >
                       <InstagramIcon />
                     </a>
                     <a
-                      href="#"
-                      aria-label="Facebook (yakında)"
+                      href={FACEBOOK_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Facebook'ta takip edin"
                       className="inline-flex size-9 items-center justify-center rounded-lg border border-border text-[#0b2545] transition-colors hover:bg-muted hover:text-primary"
                     >
                       <FacebookIcon />
                     </a>
                   </div>
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    Hesaplar yakında eklenecek.
-                  </p>
                 </div>
               </div>
             </div>
@@ -286,8 +285,7 @@ export function Iletisim() {
               <Button
                 asChild
                 size="lg"
-                variant="outline"
-                className="w-full sm:w-auto"
+                className="w-full bg-[#25D366] text-white shadow-sm transition-colors hover:bg-[#1fae57] sm:w-auto"
               >
                 <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
                   <WhatsAppIcon />

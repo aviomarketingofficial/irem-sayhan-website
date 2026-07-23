@@ -177,12 +177,12 @@ export function SSS() {
   // Her soru icin benzersiz anahtar (kategori + soru); ayni anda tek cevap acik
   const keyOf = (f: Faq) => `${f.category}|${f.question}`
 
-  // Filtre degisince acik olan kart artik gorunmuyorsa kapat
-  useEffect(() => {
-    if (openKey && !filtered.some((f) => keyOf(f) === openKey)) {
-      setOpenKey(null)
-    }
-  }, [filtered, openKey])
+  // Filtre değişince açık kart listeden düşmüş olabilir. Bunu efektle durumu
+  // sıfırlayarak değil, render sırasında TÜRETEREK çözüyoruz: açık anahtar
+  // hâlâ listede değilse kapalı sayılır. (Efektli sürüm fazladan bir çizime
+  // yol açıyordu; ayrıca kullanıcı filtreyi geri alınca kart yine açılır.)
+  const visibleOpenKey =
+    openKey && filtered.some((f) => keyOf(f) === openKey) ? openKey : null
 
   return (
     <section className="px-4 pb-24 pt-28 sm:pt-36">
@@ -259,7 +259,7 @@ export function SSS() {
                   <FaqItem
                     key={k}
                     faq={faq}
-                    isOpen={openKey === k}
+                    isOpen={visibleOpenKey === k}
                     onToggle={() => setOpenKey((prev) => (prev === k ? null : k))}
                   />
                 )

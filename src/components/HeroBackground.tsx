@@ -50,11 +50,30 @@ export function HeroBackground({
     let cancelled = false
     const last = HERO_FRAME_COUNT - 1
 
+    // Dar ekranlarda 780px kareler inisin: 74 kare ~4 MB yerine ~1 MB.
+    // Kare sayısı değişmediği için geçiş aynı akıcılıkta kalır; kare zaten
+    // beyaz degrade bir örtünün altında olduğu için çözünürlük farkı fark edilmez.
+    const small = window.matchMedia("(max-width: 768px)").matches
+
+    // 780px kareler CDN'de yoksa (henüz yüklenmediyse) sessizce 1920px'e döner.
+    // Böylece kod ile görsel yüklemesinin sırası önemsizleşir; hero hiçbir
+    // durumda boş kalmaz.
+    const withFallback = (img: HTMLImageElement, i: number) => {
+      if (!small) return
+      let fellBack = false
+      img.onerror = () => {
+        if (fellBack) return
+        fellBack = true
+        img.src = heroFramePath(i, false)
+      }
+    }
+
     // Atlama modu: animasyon oynamayacaksa yalnızca sonucu (son kare) indir
     if (playedOnce.has("hero") || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const img = new Image()
       img.decoding = "async"
-      img.src = heroFramePath(HERO_FRAME_COUNT)
+      withFallback(img, HERO_FRAME_COUNT)
+      img.src = heroFramePath(HERO_FRAME_COUNT, small)
       img.onload = () => {
         if (cancelled) return
         draw(last) // doğrudan sonuç: düzgün gülüş
@@ -74,7 +93,8 @@ export function HeroBackground({
     const loadFrame = (i: number) => {
       const img = new Image()
       img.decoding = "async"
-      img.src = heroFramePath(i + 1)
+      withFallback(img, i + 1)
+      img.src = heroFramePath(i + 1, small)
       img.onload = () => {
         if (cancelled) return
         loaded += 1

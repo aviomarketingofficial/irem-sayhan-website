@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { playedOnce } from "@/lib/animatedOnce"
+import { playedOnce, prefersReducedMotion } from "@/lib/animatedOnce"
 
 type Stat = { value: number; suffix: string; label: string; stars?: boolean }
 
@@ -24,13 +24,12 @@ function StarIcon({ filled, className }: { filled: boolean; className?: string }
 }
 
 function useCountUp(target: number, active: boolean, duration = 1600) {
-  const [val, setVal] = useState(0)
+  // Hareket azaltma açıksa sayaç hiç dönmez; değer doğrudan hedefiyle doğar.
+  // (Sayaç ekran dışındayken de hedefte durur — kullanıcı yalnızca son sayıyı görür.)
+  const [val, setVal] = useState(() => (prefersReducedMotion() ? target : 0))
   useEffect(() => {
     if (!active) return
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVal(target)
-      return
-    }
+    if (prefersReducedMotion()) return // değer zaten hedefte
     let raf = 0
     const start = performance.now()
     const tick = (now: number) => {

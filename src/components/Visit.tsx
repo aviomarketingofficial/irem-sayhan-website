@@ -1,16 +1,13 @@
 import { useEffect, useRef, useState } from "react"
-import { playedOnce } from "@/lib/animatedOnce"
+import { playedOnce, prefersReducedMotion } from "@/lib/animatedOnce"
 
 import { Button } from "@/components/ui/button"
-import { WORKING_HOURS } from "@/lib/links"
-
-const ADDRESS =
-  "Anafartalar Mah. 1610 Sok. Bakoğlu Apt. No: 1/3, Şehzadeler / Manisa 45020"
-
-// Dr. İrem Seyhan Uyarcan muayenehanesinin gerçek Google Maps konumu (pin tam burada)
-const COORDS = "38.6141386,27.4297752"
-const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${COORDS}`
-const embedUrl = `https://maps.google.com/maps?q=${COORDS}&z=17&output=embed`
+import {
+  ADDRESS,
+  DIRECTIONS_URL as directionsUrl,
+  MAP_EMBED_URL as embedUrl,
+  WORKING_HOURS,
+} from "@/lib/links"
 
 function ArrowRightIcon({ className }: { className?: string }) {
   return (
@@ -68,16 +65,16 @@ function ClockIcon({ className }: { className?: string }) {
 
 export function Visit() {
   const ref = useRef<HTMLElement>(null)
-  const [active, setActive] = useState(() => playedOnce.has("visit"))
+  // Oturumda oynadıysa VEYA hareket azaltma açıksa doğrudan görünür doğ
+  const [active, setActive] = useState(
+    () => playedOnce.has("visit") || prefersReducedMotion(),
+  )
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
     if (playedOnce.has("visit")) return // bu oturumda oynadı; tekrar oynamasın
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setActive(true)
-      return
-    }
+    if (prefersReducedMotion()) return
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

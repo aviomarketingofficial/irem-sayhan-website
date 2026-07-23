@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/genel/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Tüm görseller jsDelivr'dan gelir; bağlantıyı (DNS + TLS) şimdiden kur ki
+         ilk görsel isteğinde el sıkışma beklenmesin. -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <title>Manisa Ortodonti ve Şeffaf Plak | Dr. İrem Seyhan Uyarcan</title>
     <!-- Statik SEO varsayılanları (JS çalıştırmayan botlar için); route değişince src/lib/seo.ts günceller -->
     <meta name="description" content="Manisa'da ortodonti uzmanı muayenehanesi: şeffaf plak, diş teli, çocuk ortodontisi ve ortognatik tedavi. Muayenehane Şehzadeler'de, randevu online alınabilir." />
@@ -59,7 +63,9 @@
           }
         ],
         "sameAs": [
-          "https://www.doktortakvimi.com/irem-seyhan-uyarcan/ortodonti-dis-hekimi/manisa"
+          "https://www.doktortakvimi.com/irem-seyhan-uyarcan/ortodonti-dis-hekimi/manisa",
+          "https://www.instagram.com/ortodontimanisa/",
+          "https://www.facebook.com/driremuyarcan"
         ]
       }
     </script>

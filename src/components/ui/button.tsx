@@ -64,4 +64,7 @@ function Button({
   )
 }
 
-export { Button, buttonVariants }
+// buttonVariants yalnızca bu dosyada kullanılıyor; dışa vermek geliştirme
+// sırasındaki canlı güncellemeyi bozuyordu. İleride başka dosyada gerekirse
+// ayrı bir dosyaya taşınmalı (bileşen dosyasından dışa verilmemeli).
+export { Button }

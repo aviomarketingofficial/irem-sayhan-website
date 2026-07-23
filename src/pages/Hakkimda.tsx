@@ -4,7 +4,16 @@ import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { APPOINTMENT_URL, PHOTO_CDN } from "@/lib/links"
+import {
+  ABOUT_LEAD,
+  ABOUT_PARAGRAPHS,
+  INTERESTS,
+  MINISTATS,
+  TIMELINE,
+  VALUES,
+} from "@/data/about"
 import { cn } from "@/lib/utils"
+import { prefersReducedMotion } from "@/lib/animatedOnce"
 
 function Reveal({
   children,
@@ -16,15 +25,14 @@ function Reveal({
   delay?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const [shown, setShown] = useState(false)
+  // Hareket azaltma açıksa doğrudan görünür doğ — efekt içinde sonradan
+  // göstermek fazladan bir çizime ve kısa bir boşluğa yol açıyordu.
+  const [shown, setShown] = useState(prefersReducedMotion)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setShown(true)
-      return
-    }
+    if (prefersReducedMotion()) return
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -54,61 +62,11 @@ function Reveal({
   )
 }
 
-type TimelineEntry = { year: string; title: string; detail: string }
-
-const timeline: TimelineEntry[] = [
-  {
-    year: "2003",
-    title: "Diş Hekimliği mezuniyeti",
-    detail: "Ege Üniversitesi Diş Hekimliği Fakültesi'nden mezun oldu.",
-  },
-  {
-    year: "2009",
-    title: "Ortodonti uzmanlığı",
-    detail:
-      "Ege Üniversitesi Diş Hekimliği Fakültesi Ortodonti Ana Bilim Dalı'nda uzmanlık eğitimini tamamladı.",
-  },
-  {
-    year: "2009'dan bugüne",
-    title: "Manisa'da kendi muayenehanesi",
-    detail:
-      "Şehzadeler, Manisa'daki kendi muayenehanesinde ortodonti uzmanı olarak hasta kabul ediyor.",
-  },
-]
-
-const interests: string[] = [
-  "Diş çapraşıklığı",
-  "Sınıf 3 maloklüzyonlar",
-  "Çene problemleri",
-  "Gömülü dişler",
-  "Dudak ve damak yarıkları",
-  "Şeffaf plak tedavisi",
-  "Lingual (görünmez) ortodonti",
-  "Ortognatik (cerrahi destekli) ortodonti",
-]
-
-type Value = { title: string; text: string }
-
-const values: Value[] = [
-  {
-    title: "Anlaşılır anlatım",
-    text: "Tedavi sürecini, seçenekleri ve nedenlerini sade bir dille anlatır. Her aşamada ne olduğunu bilirsiniz.",
-  },
-  {
-    title: "Kişiye özel planlama",
-    text: "Her ağız yapısı farklıdır. Tedavi, sizin diş ve çene yapınıza göre tek tek planlanır.",
-  },
-  {
-    title: "Uzun soluklu takip",
-    text: "Tedavi bitince iş bitmez. Sonucun kalıcı olması için kontroller ve pekiştirme aşaması özenle yürütülür.",
-  },
-]
-
-const ministats: { value: string; label: string }[] = [
-  { value: "17+", label: "Yıl deneyim" },
-  { value: "2009", label: "Kendi muayenehanesi" },
-  { value: "Manisa", label: "Şehzadeler" },
-]
+// İçerik data/about.ts'te (tek kaynak) — prerender de aynı veriyi okur.
+const timeline = TIMELINE
+const interests = INTERESTS
+const values = VALUES
+const ministats = MINISTATS
 
 export function Hakkimda() {
   usePageMeta({ ...staticPageMeta["/hakkimda"], path: "/hakkimda" })
@@ -128,10 +86,7 @@ export function Hakkimda() {
               Ortodonti Uzmanı, Manisa
             </p>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              2009 yılından bu yana Manisa'daki kendi muayenehanesinde
-              yetişkinler ve çocuklar için ortodontik tedaviler uyguluyor. Diş
-              ve çene düzensizliklerinde, sizi dinleyerek ve süreci açıkça
-              anlatarak yola çıkmayı önemsiyor.
+              {ABOUT_LEAD}
             </p>
           </Reveal>
 
@@ -159,23 +114,9 @@ export function Hakkimda() {
               Kısa bir tanışma
             </h2>
             <div className="mt-6 space-y-4 text-base leading-relaxed text-muted-foreground">
-              <p>
-                1979'da Manisa'da doğdu. Lisans eğitimini Ege Üniversitesi Diş
-                Hekimliği Fakültesi'nde tamamladıktan sonra aynı üniversitenin
-                Ortodonti Ana Bilim Dalı'nda uzmanlığını aldı.
-              </p>
-              <p>
-                2009'dan bu yana Şehzadeler, Manisa'daki kendi muayenehanesinde
-                yalnızca ortodonti üzerine çalışıyor. Tel tedavisinden şeffaf
-                plak ve görünmez ortodontiye kadar farklı yöntemleri, kişinin
-                ihtiyacına göre değerlendiriyor.
-              </p>
-              <p>
-                Ortodontinin yalnızca düzgün dişler değil, sağlıklı bir kapanış
-                ve rahat bir gülümseme meselesi olduğuna inanıyor. Bu yüzden
-                tedaviye başlamadan önce muayene ve ölçümlerle hangi yolun size
-                uygun olduğunu birlikte konuşmayı tercih ediyor.
-              </p>
+              {ABOUT_PARAGRAPHS.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
             </div>
           </Reveal>
 

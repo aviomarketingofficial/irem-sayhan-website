@@ -1,6 +1,6 @@
 import { type ComponentType, useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
-import { playedOnce } from "@/lib/animatedOnce"
+import { playedOnce, prefersReducedMotion } from "@/lib/animatedOnce"
 
 type IconProps = { className?: string }
 
@@ -123,7 +123,10 @@ export function WhyChooseUs() {
   const sectionRef = useRef<HTMLElement>(null)
   const [phase, setPhase] = useState<Phase>(() => (playedOnce.has("whychooseus") ? "settle" : "idle"))
   const [slide, setSlide] = useState(0)
-  const [settled, setSettled] = useState(() => playedOnce.has("whychooseus"))
+  // Oturumda oynadıysa veya hareket azaltma açıksa geçişi beklemeden hazır say.
+  const [settleReady, setSettleReady] = useState(
+    () => playedOnce.has("whychooseus") || prefersReducedMotion(),
+  )
 
   // Bölüm görününce başlat (hareket azaltma açıksa doğrudan yerleşmiş hal)
   useEffect(() => {
@@ -163,19 +166,17 @@ export function WhyChooseUs() {
     return () => window.clearTimeout(t)
   }, [phase, slide])
 
-  // settle: başlık yukarı çıkar, sebepler tek tek dizilir (bir kare sonra tetikle ki geçiş oynasın)
+  // settle: başlık yukarı çıkar, sebepler tek tek dizilir (bir kare sonra tetikle ki geçiş oynasın).
+  // Aşama tek yönlü ilerlediği için (idle→intro→slides→settle) geri sıfırlamaya gerek yok;
+  // "settled" aşamadan türetiliyor (aşağıda).
   useEffect(() => {
-    if (phase !== "settle") {
-      setSettled(false)
-      return
-    }
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setSettled(true)
-      return
-    }
-    const r = requestAnimationFrame(() => requestAnimationFrame(() => setSettled(true)))
+    if (phase !== "settle") return
+    if (settleReady) return // zaten hazır (oturumda oynadı ya da hareket azaltma)
+    const r = requestAnimationFrame(() => requestAnimationFrame(() => setSettleReady(true)))
     return () => cancelAnimationFrame(r)
-  }, [phase])
+  }, [phase, settleReady])
+
+  const settled = phase === "settle" && settleReady
 
   const centeredStage = phase === "intro" || phase === "slides"
 

@@ -10,3 +10,13 @@ export const playedOnce = {
     played.add(key)
   },
 }
+
+// Kullanıcı "hareketi azalt" ayarını açtıysa animasyon oynatmayız.
+// useState başlangıç değerinde çağrılır: bileşen doğrudan son hâliyle doğar,
+// önce gizlenip sonra gösterilmez (fazladan çizim ve kısa boşluk olmaz).
+export function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  )
+}

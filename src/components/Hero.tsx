@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { APPOINTMENT_URL, WHATSAPP_URL } from "@/lib/links"
+import { HERO_EYEBROW, HERO_INTRO, HERO_TITLE } from "@/data/home"
 import { HeroBackground } from "@/components/HeroBackground"
 import { playedOnce } from "@/lib/animatedOnce"
 
@@ -52,16 +53,13 @@ export function Hero({ revealed = true }: { revealed?: boolean }) {
 
       <div className="mx-auto w-full max-w-5xl px-4 pt-28 pb-16 sm:px-6 sm:pt-32 lg:px-8">
         <p className="mb-4 text-sm font-medium uppercase tracking-wider text-primary">
-          Ortodonti Uzmanı · Manisa
+          {HERO_EYEBROW}
         </p>
         <h1 className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-[#0b2545] sm:text-5xl lg:text-6xl">
-          Manisa'nın gülüşüne 17 yıldır aynı el dokunuyor.
+          {HERO_TITLE}
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-[#0b2545]/75 sm:text-lg">
-          Dr. İrem Seyhan Uyarcan, 2009 yılından bu yana Manisa'da kendi
-          muayenehanesinde ortodonti tedavisi sunuyor. Çocukluğunuzda başlayan bir
-          tedavi de olsa, yetişkinlikte verdiğiniz yeni bir karar da olsa; süreç
-          boyunca aynı hekim sizinle ilgilenir.
+          {HERO_INTRO}
         </p>
 
         <div className="mt-9 flex flex-wrap items-center gap-3">
