@@ -149,11 +149,22 @@ function renderPage(template: string, meta: RouteMeta, body: string): string {
     html = mustReplace(html, /(\n\s*<\/head>)/, `\n${scripts}$1`, "</head>")
   }
 
-  // Gövde: root'un İÇİNE basit semantik HTML (inline stil/sınıf yok)
+  // Gövde: root'un İÇİNE basit semantik HTML (inline stil/sınıf yok).
+  //
+  // GEÇİCİ ÇÖZÜM — display:none neden var:
+  // Bu HTML'de CSS sınıfı yok (bilerek; bot temiz metin görsün diye). Ama tarayıcı
+  // onu React gelmeden önce boyuyordu ve kullanıcı ~850 ms boyunca stilsiz, txt
+  // gibi bir sayfa görüyordu. Gizleyince kullanıcı bu değişiklikten önceki hâline
+  // dönüyor (kısa beyaz ekran), bot ise metni okumaya devam ediyor:
+  //   - JS çalıştırmayan botlar (AI tarayıcıları) CSS uygulamaz → metni görür
+  //   - Googlebot JS çalıştırır → zaten React'in çizdiği asıl sayfayı görür
+  //   - Aynı HTML herkese gidiyor; içerik React'in gösterdiğiyle birebir aynı
+  // Kalıcı çözüm hydration: prerender React'i gerçekten çalıştırır, çıktı
+  // tasarımlı olur ve bu sarmalayıcıya hiç gerek kalmaz.
   html = mustReplace(
     html,
     /<div id="root"><\/div>/,
-    `<div id="root">\n${body}\n    </div>`,
+    `<div id="root"><div data-prerender hidden style="display:none">\n${body}\n    </div></div>`,
     '<div id="root">',
   )
 
